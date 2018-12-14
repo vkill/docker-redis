@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  redis:
+    command: redis-server /data/redis.conf
+    volumes:
+      - redis_log:/var/log/redis
+
+volumes:
+  redis_log:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${REDIS_LOG_DIR:-/data/data_redis/redis_log}
+      o: bind
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${REDIS_DATA_DIR:-/data/data_redis/redis_data}
+      o: bind

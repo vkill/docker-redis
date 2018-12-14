@@ -1,0 +1,73 @@
+---
+- name: Docker redis prepare
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Check redis_data_dir exists
+      stat:
+        path: "{{ redis_data_dir }}"
+      register: redis_data_dir_stat
+
+    - name: Ensure redis_data_dir exists
+      file:
+        state: directory
+        path: "{{ redis_data_dir }}"
+        group: "docker"
+        mode: 0775
+      when: not redis_data_dir_stat.stat.exists
+
+    - name: Ensure redis_log_dir exists
+      file:
+        state: directory
+        path: "{{ redis_log_dir }}"
+        group: "docker"
+        mode: 0777
+
+    - name: Ensure redis_dotenv_dir exists
+      file:
+        state: directory
+        path: "{{ redis_dotenv_dir }}"
+        mode: 0755
+
+    - name: Touch .env
+      file:
+        path: "{{ redis_dotenv_dir }}/.env"
+        state: touch
+        mode: 0644
+        access_time: preserve
+        modification_time: preserve
+
+    - name: Update .env
+      lineinfile:
+        path: "{{ redis_dotenv_dir }}/.env"
+        regexp: "^{{ item.key }}="
+        line: '{{ item.key }}={{ item.value }}'
+      with_items:
+        - key: "REDIS_PORT"
+          value: "{{ redis_port }}"
+        - key: "REDIS_DATA_DIR"
+          value: "{{ redis_data_dir }}"
+        - key: "REDIS_LOG_DIR"
+          value: "{{ redis_log_dir }}"
+
+    - name: Touch redis.conf
+      file:
+        path: "{{ redis_data_dir }}/redis.conf"
+        state: touch
+        mode: 0644
+        access_time: preserve
+        modification_time: preserve
+
+    - name: Update redis.conf
+      lineinfile:
+        path: "{{ redis_data_dir }}/redis.conf"
+        regexp: "^{{ item.key }}[ ]+"
+        line: '{{ item.key }} {{ item.value }}'
+      with_items:
+        - key: "loglevel"
+          value: "{{ redis_loglevel | default('notice') }}"
+        - key: "logfile"
+          value: "/var/log/redis/redis.log"
+        - key: "pidfile"
+          value: "/var/run/redis/redis.pid"

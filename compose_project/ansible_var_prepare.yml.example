@@ -1,0 +1,9 @@
+---
+redis_root_dir: "/data/data_redis"
+
+redis_dotenv_dir: "{{ redis_root_dir }}/compose_project"
+
+redis_port: 6379
+
+redis_data_dir: "{{ redis_root_dir }}/redis_data"
+redis_log_dir: "{{ redis_root_dir }}/redis_log"
