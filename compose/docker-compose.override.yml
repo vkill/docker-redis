@@ -11,11 +11,11 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ${REDIS_LOG_DIR:-/data/data_redis/redis_log}
+      device: ${REDIS_LOG_DIR:-/data/x_redis/redis_log}
       o: bind
   redis_data:
     driver: local
     driver_opts:
       type: none
-      device: ${REDIS_DATA_DIR:-/data/data_redis/redis_data}
+      device: ${REDIS_DATA_DIR:-/data/x_redis/redis_data}
       o: bind

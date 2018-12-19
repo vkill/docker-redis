@@ -1,5 +1,5 @@
 ---
-redis_root_dir: "/data/data_redis"
+redis_root_dir: "/data/x_redis"
 
 redis_dotenv_dir: "{{ redis_root_dir }}/compose_project"
 
