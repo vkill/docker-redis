@@ -2,7 +2,7 @@ version: '3'
 
 services:
   redis:
-    image: "${REDIS_DOCKER_TAG:-redis:5.0-alpine}"
+    image: "${REDIS_DOCKER_TAG:-redis:5-alpine}"
     volumes:
       - redis_data:/data
     healthcheck:
